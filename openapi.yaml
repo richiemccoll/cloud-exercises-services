@@ -1,0 +1,635 @@
+openapi: 3.1.0
+info:
+  title: Cloud Exercises Platform API
+  version: 1.0.0
+  description: OpenAPI spec for backend services (users, projects, portfolio, roadmaps, quizzes)
+servers:
+  - url: /api
+paths:
+  /users:
+    get:
+      summary: List users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      summary: Update user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Delete user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted
+  /projects:
+    get:
+      summary: List projects
+      responses:
+        '200':
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      summary: Create project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Project created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /projects/{id}:
+    get:
+      summary: Get project by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Project details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+  /projects/{id}/start:
+    post:
+      summary: Start or resume a project for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+      responses:
+        '200':
+          description: Project started or resumed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: string
+                  userId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [started, resumed]
+  /projects/{id}/steps:
+    get:
+      summary: Get step-by-step instructions for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of steps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Step'
+  /projects/{id}/steps/{stepId}/checklist:
+    post:
+      summary: Check off a step for a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stepId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                checked:
+                  type: boolean
+      responses:
+        '200':
+          description: Step checked off
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stepId:
+                    type: string
+                  userId:
+                    type: string
+                  checked:
+                    type: boolean
+  /users/{userId}/progress:
+    get:
+      summary: Get progress for projects and roadmap phases
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Progress details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projects:
+                    type: array
+                    items:
+                      type: object
+                  roadmapPhases:
+                    type: array
+                    items:
+                      type: object
+  /projects/{id}/quizzes:
+    get:
+      summary: Get quizzes for a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of quizzes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Quiz'
+  /projects/{id}/quizzes/{quizId}/submit:
+    post:
+      summary: Submit quiz answers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: quizId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                answers:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '200':
+          description: Quiz submission result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quizId:
+                    type: string
+                  userId:
+                    type: string
+                  answers:
+                    type: array
+                    items:
+                      type: object
+    put:
+      summary: Update project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Project updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+    delete:
+      summary: Delete project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Project deleted
+  /portfolio:
+    get:
+      summary: List portfolio items
+      responses:
+        '200':
+          description: List of portfolio items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioItem'
+    post:
+      summary: Create portfolio item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PortfolioItem'
+      responses:
+        '201':
+          description: Portfolio item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PortfolioItem'
+  /roadmaps:
+    get:
+      summary: List roadmaps
+      responses:
+        '200':
+          description: List of roadmaps
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Roadmap'
+    post:
+      summary: Create roadmap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Roadmap'
+      responses:
+        '201':
+          description: Roadmap created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Roadmap'
+  /quizzes:
+    get:
+      summary: List quizzes
+      responses:
+        '200':
+          description: List of quizzes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Quiz'
+    post:
+      summary: Create quiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Quiz'
+      responses:
+        '201':
+          description: Quiz created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Quiz'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum: [Learner, Author, Admin]
+        progress:
+          type: object
+          properties:
+            roadmapId:
+              type: string
+            phaseId:
+              type: string
+            projectId:
+              type: string
+            stepId:
+              type: string
+        portfolio:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortfolioItem'
+        badges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Badge'
+    PortfolioItem:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        projectId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        shareUrl:
+          type: string
+        createdAt:
+          type: string
+    Attachment:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [pdf, image, link]
+        url:
+          type: string
+    Badge:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        type:
+          type: string
+        criteria:
+          type: string
+        awardedDate:
+          type: string
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        valueProp:
+          type: string
+        timeEffort:
+          type: string
+        prerequisites:
+          type: array
+          items:
+            type: string
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/Step'
+        track:
+          type: string
+          enum: [low, high, none]
+        phaseId:
+          type: string
+        roadmapId:
+          type: string
+        difficulty:
+          type: string
+        quizzes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quiz'
+    Step:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        order:
+          type: integer
+        content:
+          type: string
+        hints:
+          type: array
+          items:
+            type: string
+        assets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Asset'
+        checklist:
+          type: array
+          items:
+            type: string
+    Asset:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [image, code, link]
+        value:
+          type: string
+    Quiz:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    Question:
+      type: object
+      properties:
+        id:
+          type: string
+        quizId:
+          type: string
+        text:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Answer'
+        explanation:
+          type: string
+    Answer:
+      type: object
+      properties:
+        id:
+          type: string
+        questionId:
+          type: string
+        text:
+          type: string
+        isCorrect:
+          type: boolean
+    Roadmap:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        role:
+          type: string
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+    Phase:
+      type: object
+      properties:
+        id:
+          type: string
+        roadmapId:
+          type: string
+        title:
+          type: string
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+    Submission:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        stepId:
+          type: string
+        quizId:
+          type: string
+        answers:
+          type: array
+          items:
+            type: object
+        completed:
+          type: boolean
+        submittedAt:
+          type: string
