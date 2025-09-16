@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
-import clerk, { ClerkClient } from '@clerk/fastify';
+import { getAuth, ClerkClient } from '@clerk/fastify';
 
 const allowedPaths = ['documentation'];
 
@@ -12,9 +12,9 @@ export default async function userPlugin(fastify: FastifyInstance) {
       return;
     }
 
-    const { userId } = clerk.getAuth(request);
+    const { userId } = getAuth(request);
     const clerkClient = fastify.getDecorator<ClerkClient>('clerkClient');
-    
+
     // If user isn't authenticated, return a 401 error
     if (!userId) {
       return reply.code(401).send({ error: 'User not authenticated' });
