@@ -11,7 +11,7 @@ const app = fastify({
 });
 
 const PORT = config.PORT;
-const HOST = config.API_HOST;
+const HOST = config.HOST;
 
 async function start() {
   app.register(appService);
