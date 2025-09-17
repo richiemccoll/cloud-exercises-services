@@ -4,7 +4,7 @@
     "main": "src/index.js",
     "type": "module",
     "scripts": {
-        "dev": "node --watch --import=tsx src/server.ts",
+        "dev": "tsc --watch & nodemon --watch dist --exec node dist/server.js",
         "start": "npm run build && node ./dist/server.js",
         "build": "tsc",
         "test": "vitest",
@@ -14,9 +14,9 @@
         "@clerk/backend": "^2.14.0",
         "@clerk/fastify": "^2.4.31",
         "@fastify/autoload": "^6.3.1",
-        "@fastify/type-provider-typebox": "^5.2.0",
         "@fastify/swagger": "^9.5.1",
         "@fastify/swagger-ui": "^5.2.3",
+        "@fastify/type-provider-typebox": "^5.2.0",
         "@google-cloud/firestore": "^7.11.3",
         "@sinclair/typebox": "^0.34.41",
         "close-with-grace": "^2.2.0",
@@ -28,6 +28,7 @@
     "devDependencies": {
         "@babel/preset-typescript": "^7.27.1",
         "eslint": "^8.57.0",
+        "nodemon": "^3.1.10",
         "tsx": "^4.20.5",
         "typescript": "^5.9.2",
         "vitest": "^3.2.4"

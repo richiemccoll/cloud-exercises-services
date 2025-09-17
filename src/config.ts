@@ -9,6 +9,7 @@ const schema = Type.Object({
   CLERK_SECRET_KEY: Type.String(),
   LOG_LEVEL: Type.String({ default: 'trace' }),
   PORT: Type.Number({ default: 8080 }),
+  ENV: Type.String({ default: 'development' }),
 });
 
 export type Config = Static<typeof schema>;

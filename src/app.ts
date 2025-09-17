@@ -11,6 +11,7 @@ import roadmapsRoutes from './routes/roadmaps/roadmaps.js';
 
 import config from './config.js';
 import userPlugin from './plugins/user.js';
+import healthCheck from './routes/health/index.js';
 
 const buildApp: FastifyPluginAsync = async (fastify): Promise<void> => {
   fastify.decorate('config', config);
@@ -24,6 +25,7 @@ const buildApp: FastifyPluginAsync = async (fastify): Promise<void> => {
   await fastify.register(quizzesRoutes);
   await fastify.register(usersRoutes);
   await fastify.register(roadmapsRoutes);
+  await fastify.register(healthCheck);
 };
 
 export default buildApp;
