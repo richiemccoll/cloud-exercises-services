@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 import { getAuth, ClerkClient } from '@clerk/fastify';
 
-const allowedPaths = ['documentation'];
+const allowedPaths = ['documentation', 'api/projects'];
 
 export default async function userPlugin(fastify: FastifyInstance) {
   fastify.decorateRequest('user', null);
