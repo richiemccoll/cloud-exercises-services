@@ -10,6 +10,7 @@ const schema = Type.Object({
   LOG_LEVEL: Type.String({ default: 'trace' }),
   PORT: Type.Number({ default: 8080 }),
   ENV: Type.String({ default: 'development' }),
+  GCP_PROJECT_ID: Type.Optional(Type.String()),
 });
 
 export type Config = Static<typeof schema>;

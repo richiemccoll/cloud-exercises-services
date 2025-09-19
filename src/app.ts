@@ -2,15 +2,13 @@ import { FastifyPluginAsync } from 'fastify';
 
 import swagger from './plugins/external/swagger.js';
 import clerkAPIPlugin from './plugins/external/clerk.js';
+import firestorePlugin from './plugins/external/firestore.js';
 
 import projectsRoutes from './routes/projects/projects.js';
-import portfolioRoutes from './routes/portfolio/portfolio.js';
-import quizzesRoutes from './routes/quizzes/quizzes.js';
-import usersRoutes from './routes/users/users.js';
-import roadmapsRoutes from './routes/roadmaps/roadmaps.js';
+import profileRoutes from './routes/profile/profile.js';
 
 import config from './config.js';
-import userPlugin from './plugins/user.js';
+import { createUserStorage } from './plugins/userStorage.js';
 import healthCheck from './routes/health/index.js';
 
 const buildApp: FastifyPluginAsync = async (fastify): Promise<void> => {
@@ -18,13 +16,12 @@ const buildApp: FastifyPluginAsync = async (fastify): Promise<void> => {
 
   await swagger(fastify);
   await clerkAPIPlugin(fastify);
-  await userPlugin(fastify);
+  await firestorePlugin(fastify);
+
+  createUserStorage(fastify);
 
   await fastify.register(projectsRoutes);
-  await fastify.register(portfolioRoutes);
-  await fastify.register(quizzesRoutes);
-  await fastify.register(usersRoutes);
-  await fastify.register(roadmapsRoutes);
+  await fastify.register(profileRoutes);
   await fastify.register(healthCheck);
 };
 

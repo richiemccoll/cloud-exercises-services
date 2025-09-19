@@ -7,6 +7,17 @@ import config from './config.js';
 const app = fastify({
   logger: {
     level: config.LOG_LEVEL || 'trace',
+    transport:
+      config.ENV === 'development'
+        ? {
+            target: 'pino-pretty',
+            options: {
+              colorize: true,
+              translateTime: 'SYS:standard',
+              ignore: 'pid,hostname',
+            },
+          }
+        : undefined,
   },
 });
 
